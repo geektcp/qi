@@ -1,9 +1,9 @@
-package com.geektcp.gomoku.server;
+package com.geektcp.thybang.server;
 
 import java.util.Scanner;
 
 /**
- * com.geektcp.gomoku.server.GomokuPlay class contains main method that plays the game.
+ * com.geektcp.thybang.server.GomokuPlay class contains main method that plays the game.
  */
 public class GomokuPlay {
 	/**

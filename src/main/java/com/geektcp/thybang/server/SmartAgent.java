@@ -1,7 +1,7 @@
-package com.geektcp.gomoku.server;
+package com.geektcp.thybang.server;
 
 /**
- * com.geektcp.gomoku.server.SmartAgent class that uses minimax algorithm and heuristic evaluation to pick next move
+ * com.geektcp.thybang.server.SmartAgent class that uses minimax algorithm and heuristic evaluation to pick next move
  */
 public class SmartAgent extends Agent {
 

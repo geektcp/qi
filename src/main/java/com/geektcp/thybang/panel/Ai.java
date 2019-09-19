@@ -1,12 +1,10 @@
-package com.geektcp.gomoku.panel;
+package com.geektcp.thybang.panel;
 /**
  * AI算法和主函数入口
  */
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;

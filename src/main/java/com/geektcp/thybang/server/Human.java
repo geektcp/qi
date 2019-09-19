@@ -1,9 +1,9 @@
-package com.geektcp.gomoku.server;
+package com.geektcp.thybang.server;
 
 import java.util.Scanner;
 
 /**
- * com.geektcp.gomoku.server.Human class contains prompts for user input
+ * com.geektcp.thybang.server.Human class contains prompts for user input
  */
 public class Human extends Agent {
 

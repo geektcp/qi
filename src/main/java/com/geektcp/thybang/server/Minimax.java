@@ -1,11 +1,11 @@
-package com.geektcp.gomoku.server;
+package com.geektcp.thybang.server;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * com.geektcp.gomoku.server.Minimax class has evaluation function and minimax algorithm with alpha-beta pruning to determine best moves.
+ * com.geektcp.thybang.server.Minimax class has evaluation function and minimax algorithm with alpha-beta pruning to determine best moves.
  */
 public class Minimax {
 
@@ -23,7 +23,7 @@ public class Minimax {
 	}
 
 	/**
-	 * com.geektcp.gomoku.server.Minimax algorithm with alpha-beta pruning.
+	 * com.geektcp.thybang.server.Minimax algorithm with alpha-beta pruning.
 	 * @param  depth lookahead
 	 * @param  myBest alpha
 	 * @param  theirBest beta

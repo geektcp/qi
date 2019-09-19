@@ -1,4 +1,4 @@
-package com.geektcp.gomoku.panel;
+package com.geektcp.thybang.panel;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

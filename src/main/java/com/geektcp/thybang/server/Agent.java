@@ -1,7 +1,7 @@
-package com.geektcp.gomoku.server;
+package com.geektcp.thybang.server;
 
 /**
- * com.geektcp.gomoku.server.Agent class that is extended by other players
+ * com.geektcp.thybang.server.Agent class that is extended by other players
  */
 public class Agent {
 	Board board;
@@ -10,8 +10,8 @@ public class Agent {
 	boolean isFirst;
 
 	/**
-	 * com.geektcp.gomoku.server.Agent constructor
-	 * Each agent has an instance of com.geektcp.gomoku.server.Board
+	 * com.geektcp.thybang.server.Agent constructor
+	 * Each agent has an instance of com.geektcp.thybang.server.Board
 	 * @param  n       board dimension
 	 * @param  m       winning chain length
 	 * @param  isFirst player's turn

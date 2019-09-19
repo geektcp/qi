@@ -1,10 +1,10 @@
-package com.geektcp.gomoku.server;
+package com.geektcp.thybang.server;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * com.geektcp.gomoku.server.RandomAgent class has Random() to generate random moves
+ * com.geektcp.thybang.server.RandomAgent class has Random() to generate random moves
  */
 public class RandomAgent extends Agent {
 

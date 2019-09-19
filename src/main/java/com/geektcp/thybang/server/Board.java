@@ -1,11 +1,11 @@
-package com.geektcp.gomoku.server;
+package com.geektcp.thybang.server;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * com.geektcp.gomoku.server.Board class that contains all board manipulation and look around methods
+ * com.geektcp.thybang.server.Board class that contains all board manipulation and look around methods
  * first player / black == 'x'
  * second player / white == 'o'
  * empty space == '.'
@@ -21,7 +21,7 @@ public class Board {
 	String lastMove;
 
 	/**
-	 * com.geektcp.gomoku.server.Board constructor
+	 * com.geektcp.thybang.server.Board constructor
 	 * @param  n board dimension
 	 * @param  m winning chain length
 	 */
@@ -39,7 +39,7 @@ public class Board {
 	}
 
 	/**
-	 * Copy constructor for com.geektcp.gomoku.server.Board
+	 * Copy constructor for com.geektcp.thybang.server.Board
 	 * @param  other board to copy
 	 */
 	public Board(Board other) {
