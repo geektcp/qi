@@ -6,7 +6,7 @@ import java.awt.event.MouseListener;
 /**
  * Created by TangHaiyang on 2019/9/20.
  */ // 实现鼠标事件接口
-public class GomokuMouseEvent implements MouseListener {
+public class ThyMouseEvent implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         int x = round(e.getX()), y = round(e.getY());
         if (x >= 45 && x <= 675 && y >= 45 && y <= 675 && Ai.chessBoard[y / 45][x / 45] == 0 && Ai.isBlack == false) {

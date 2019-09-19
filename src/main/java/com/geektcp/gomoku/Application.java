@@ -3,7 +3,7 @@ package com.geektcp.gomoku;
 
 import com.geektcp.gomoku.panel.Ai;
 import com.geektcp.gomoku.panel.DrawingPanel;
-import com.geektcp.gomoku.panel.GomokuMouseEvent;
+import com.geektcp.gomoku.panel.ThyMouseEvent;
 
 
 /**
@@ -13,7 +13,7 @@ public class Application {
 
     public static void main(String[] args) {
         DrawingPanel panel = new DrawingPanel(700, 700);
-        GomokuMouseEvent myMouseEvent = new GomokuMouseEvent();
+        ThyMouseEvent myMouseEvent = new ThyMouseEvent();
         panel.addMouseListener(myMouseEvent);
         Ai.init(panel);
         Ai.initChessBoard();
