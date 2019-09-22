@@ -2,8 +2,8 @@ package com.geektcp.thybang.panel;
 
 
 /**
- *  Ö÷½çÃæºÍÒµÎñÂß¼­
-*/
+ *  ä¸»ç•Œé¢å’Œä¸šåŠ¡é€»è¾‘
+ */
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,67 +16,67 @@ import java.io.File;
 import java.io.IOException;
 
 public final class DrawingPanel extends FileFilter
-    implements ActionListener, MouseMotionListener,  WindowListener {   
-    // ³£Á¿
+        implements ActionListener, MouseMotionListener,  WindowListener {
+    // å¸¸é‡
     public static final String HEADLESS_PROPERTY   = "my.headless";
     public static final String MULTIPLE_PROPERTY   =  "my.multiple";
     public static final String SAVE_PROPERTY       = "my.save";
-    private static final String TITLE              = "Îå×ÓÆå";
+    private static final String TITLE              = "äº”å­æ£‹";
     private static final Color GRID_LINE_COLOR     = new Color(64, 64, 64, 128);
-    private static final int GRID_SIZE             = 10;      // 10px Íø¸ñ¼ä¾à
-    private static final int DELAY                 = 100;     // ÑÓÊ±delay between repaints in millis
+    private static final int GRID_SIZE             = 10;      // 10px ç½‘æ ¼é—´è·
+    private static final int DELAY                 = 100;     // å»¶æ—¶delay between repaints in millis
     private static final int MAX_SIZE              = 10000;   // max width/height
-    private static final boolean DEBUG             = true; 	  // DeBug ¿ª¹Ø
-    private static final boolean SAVE_SCALED_IMAGES = true;   // true panel·Å´óËõĞ¡Ê±, ±£Áô·Å´ó×´Ì¬ÏÂµÄÍ¼Æ¬
+    private static final boolean DEBUG             = true; 	  // DeBug å¼€å…³
+    private static final boolean SAVE_SCALED_IMAGES = true;   // true panelæ”¾å¤§ç¼©å°æ—¶, ä¿ç•™æ”¾å¤§çŠ¶æ€ä¸‹çš„å›¾ç‰‡
     private static int instances = 0;
     private static Thread shutdownThread = null;
-    
+
 
     private static boolean hasProperty(String name) {
         try {
             return System.getProperty(name) != null;
         } catch (SecurityException e) {
-        	// ¶ÁÖµÒì³£
+            // è¯»å€¼å¼‚å¸¸
             if (DEBUG) System.out.println("Security exception when trying to read " + name);
             return false;
         }
     }
-    
-    // ·µ»ØÖ÷Ïß³ÌÊÇ·ñÔÚÔËĞĞ main is active
+
+    // è¿”å›ä¸»çº¿ç¨‹æ˜¯å¦åœ¨è¿è¡Œ main is active
     private static boolean mainIsActive() {
         ThreadGroup group = Thread.currentThread().getThreadGroup();
         int activeCount = group.activeCount();
-        
-        // ÔÚÏß³Ì×éÖĞÑ°ÕÒÖ÷Ïß³Ì
+
+        // åœ¨çº¿ç¨‹ç»„ä¸­å¯»æ‰¾ä¸»çº¿ç¨‹
         Thread[] threads = new Thread[activeCount];
         group.enumerate(threads);
         for (int i = 0; i < threads.length; i++) {
             Thread thread = threads[i];
             String name = ("" + thread.getName()).toLowerCase();
-            if (name.indexOf("main") >= 0 || 
-                name.indexOf("testrunner-assignmentrunner") >= 0) {
-                // ÕÒµ½Ö÷Ïß³Ì
+            if (name.indexOf("main") >= 0 ||
+                    name.indexOf("testrunner-assignmentrunner") >= 0) {
+                // æ‰¾åˆ°ä¸»çº¿ç¨‹
                 // (TestRunnerApplet's main runner also counts as "main" thread)
                 return thread.isAlive();
             }
         }
-        
-        // Ã»ÓĞÕÒµ½Ö÷Ïß³Ì
+
+        // æ²¡æœ‰æ‰¾åˆ°ä¸»çº¿ç¨‹
         return false;
     }
-    
-    // ×Ô¶¨ÒåÒ»¸öImagePanel
+
+    // è‡ªå®šä¹‰ä¸€ä¸ªImagePanel
     private class ImagePanel extends JPanel {
         private static final long serialVersionUID = 0;
         private Image image;
-        
+
         public ImagePanel(Image image) {
             setImage(image);
             setBackground(Color.WHITE);
             setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
             setAlignmentX(0.0f);
         }
-        
+
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2 = (Graphics2D) g;
@@ -84,8 +84,8 @@ public final class DrawingPanel extends FileFilter
                 g2.scale(currentZoom, currentZoom);
             }
             g2.drawImage(image, 0, 0, this);
-            
-            // ÎªÁËµ÷ÊÔ·½±ã¼ÓÈëµÄÍø¸ñÏß
+
+            // ä¸ºäº†è°ƒè¯•æ–¹ä¾¿åŠ å…¥çš„ç½‘æ ¼çº¿
             if (gridLines) {
                 g2.setPaint(GRID_LINE_COLOR);
                 for (int row = 1; row <= getHeight() / GRID_SIZE; row++) {
@@ -96,35 +96,35 @@ public final class DrawingPanel extends FileFilter
                 }
             }
         }
-        
+
         public void setImage(Image image) {
             this.image = image;
             repaint();
         }
     }
 
-    // ¿Ø¼ş
-    private int width, height;             // ´°¿Ú frame µÄ´óĞ¡
-    private JFrame frame;                  // ×Ü´°¿ÚµÄ frame
-    private JPanel panel;                  // ×ÜµÄ»­²¼Ãæ°å
-    private ImagePanel imagePanel;         // ÕæÕıµÄ»æ»­Ãæ°å
-    private BufferedImage image;           // ¼ÇÂ¼»æÍ¼µÄÇé¿ö
-    private Graphics2D g2;                 // 2D»æÍ¼ graphics context
-    private JLabel statusBar;              // ×´Ì¬À¸ÏÔÊ¾Êó±êÒÆ¶¯µÄÎ»ÖÃ
-    private JFileChooser chooser;          // ±£´æÑ¡Ïî file chooser
-    private Timer timer;                   // »æÖÆµÄ¶¯»­Ê±¼ä
+    // æ§ä»¶
+    private int width, height;             // çª—å£ frame çš„å¤§å°
+    private JFrame frame;                  // æ€»çª—å£çš„ frame
+    private JPanel panel;                  // æ€»çš„ç”»å¸ƒé¢æ¿
+    private ImagePanel imagePanel;         // çœŸæ­£çš„ç»˜ç”»é¢æ¿
+    private BufferedImage image;           // è®°å½•ç»˜å›¾çš„æƒ…å†µ
+    private Graphics2D g2;                 // 2Dç»˜å›¾ graphics context
+    private JLabel statusBar;              // çŠ¶æ€æ æ˜¾ç¤ºé¼ æ ‡ç§»åŠ¨çš„ä½ç½®
+    private JFileChooser chooser;          // ä¿å­˜é€‰é¡¹ file chooser
+    private Timer timer;                   // ç»˜åˆ¶çš„åŠ¨ç”»æ—¶é—´
     private Color backgroundColor = Color.WHITE;
-    private boolean PRETTY = true;         // Ïû³ı¾â³İ²Ù×÷true to anti-alias
-    private boolean gridLines = false;		//ÊÇ·ñÍø¸ñÏß
+    private boolean PRETTY = true;         // æ¶ˆé™¤é”¯é½¿æ“ä½œtrue to anti-alias
+    private boolean gridLines = false;		//æ˜¯å¦ç½‘æ ¼çº¿
     private int currentZoom = 1;
-    private int initialPixel;              // ³õÊ¼»¯Ã¿¸öÏñËØµã
-    
-    // ¸ù¾İwidthºÍheight»æÖÆÒ»¸öpanel
+    private int initialPixel;              // åˆå§‹åŒ–æ¯ä¸ªåƒç´ ç‚¹
+
+    // æ ¹æ®widthå’Œheightç»˜åˆ¶ä¸€ä¸ªpanel
     public DrawingPanel(int width, int height) {
         if (width < 0 || width > MAX_SIZE || height < 0 || height > MAX_SIZE) {
             throw new IllegalArgumentException("Illegal width/height: " + width + " x " + height);
         }
-        //synchronized±£Ö¤ÔÚÍ¬Ò»Ê±¿Ì×î¶àÖ»ÓĞÒ»¸öÏß³ÌÖ´ĞĞ¸Ã¶Î´úÂë       
+        //synchronizedä¿è¯åœ¨åŒä¸€æ—¶åˆ»æœ€å¤šåªæœ‰ä¸€ä¸ªçº¿ç¨‹æ‰§è¡Œè¯¥æ®µä»£ç 
         synchronized (getClass()) {
             instances++;
             if (shutdownThread == null) {
@@ -132,7 +132,7 @@ public final class DrawingPanel extends FileFilter
                     public void run() {
                         try {
                             while (true) {
-                                //Íê³ÉÖ´ĞĞÖ÷Ïß³ÌÒÑ¾­¹Òµô
+                                //å®Œæˆæ‰§è¡Œä¸»çº¿ç¨‹å·²ç»æŒ‚æ‰
                                 if ((instances == 0 || shouldSave()) && !mainIsActive()) {
                                     try {
                                         System.exit(0);
@@ -150,49 +150,49 @@ public final class DrawingPanel extends FileFilter
         }
         this.width = width;
         this.height = height;
-        
+
         if (DEBUG) System.out.println("w=" + width + ",h=" + height +  ",graph=" + isGraphical() + ",save=" + shouldSave());
-        
+
         if (shouldSave()) {
-            // Í¼Ïñ²»ÄÜ³¬¹ı256ÖĞÑÕÉ«
+            // å›¾åƒä¸èƒ½è¶…è¿‡256ä¸­é¢œè‰²
             image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);
-            PRETTY = false;   // ¹Ø±Õ¿¹¾â³İ£¬½ÚÊ¡µ÷É«°åÑÕÉ«
-            
-            // ÓÃ³õÊ¼»¯µÄ±³¾°É«Ìî³äframe£¬ÒòÎªËü²»»áÍ¸Ã÷ÏÔÊ¾ARGBÍ¼Ïñ
+            PRETTY = false;   // å…³é—­æŠ—é”¯é½¿ï¼ŒèŠ‚çœè°ƒè‰²æ¿é¢œè‰²
+
+            // ç”¨åˆå§‹åŒ–çš„èƒŒæ™¯è‰²å¡«å……frameï¼Œå› ä¸ºå®ƒä¸ä¼šé€æ˜æ˜¾ç¤ºARGBå›¾åƒ
             Graphics g = image.getGraphics();
             g.setColor(backgroundColor);
-            // ¼ÓÉÏ1£¬·ÀÖ¹width»òheightÎª0
+            // åŠ ä¸Š1ï¼Œé˜²æ­¢widthæˆ–heightä¸º0
             g.fillRect(0, 0, width + 1, height + 1);
         } else {
-        	//ARGB
+            //ARGB
             image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         }
-        initialPixel = image.getRGB(0, 0);        
+        initialPixel = image.getRGB(0, 0);
         g2 = (Graphics2D) image.getGraphics();
         g2.setColor(Color.BLACK);
         if (PRETTY) {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
-            
+
         if (isGraphical()) {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch (Exception e) {}
-            
+
             statusBar = new JLabel(" ");
             statusBar.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            
+
             panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
             panel.setBackground(backgroundColor);
             panel.setPreferredSize(new Dimension(width, height));
             imagePanel = new ImagePanel(image);
             imagePanel.setBackground(backgroundColor);
             panel.add(imagePanel);
-            
-            // ¼àÌıÊó±êÊÂ¼ş
+
+            // ç›‘å¬é¼ æ ‡äº‹ä»¶
             panel.addMouseMotionListener(this);
-            
-            // Ö÷½çÃæ´°¸ñ
+
+            // ä¸»ç•Œé¢çª—æ ¼
             frame = new JFrame(TITLE);
             frame.addWindowListener(this);
             JScrollPane center = new JScrollPane(panel);
@@ -200,81 +200,81 @@ public final class DrawingPanel extends FileFilter
             frame.getContentPane().add(statusBar, "South");
             frame.setBackground(Color.WHITE);
 
-            // ²Ëµ¥À¸
+            // èœå•æ 
             setupMenuBar();
-            
+
             frame.pack();
             center(frame);
             frame.setVisible(true);
             if (!shouldSave()) {
                 toFront(frame);
-            }        
-            // ÖØ»æupdate
+            }
+            // é‡ç»˜update
             timer = new Timer(DELAY, this);
             timer.start();
         }
     }
-    
-    // ÎÄ¼ş±£´æ¸ñÊ½¿ÉÒÔÎªpngºÍgif
+
+    // æ–‡ä»¶ä¿å­˜æ ¼å¼å¯ä»¥ä¸ºpngå’Œgif
     public boolean accept(File file) {
         return file.isDirectory() ||
-            (file.getName().toLowerCase().endsWith(".png") || 
-             file.getName().toLowerCase().endsWith(".gif"));
+                (file.getName().toLowerCase().endsWith(".png") ||
+                        file.getName().toLowerCase().endsWith(".gif"));
     }
-    
-    //³õÊ¼»¯UI×é¼ş
+
+    //åˆå§‹åŒ–UIç»„ä»¶
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof Timer) {
-            // ÖØ»æ
+            // é‡ç»˜
             panel.repaint();
-        } else if (e.getActionCommand().equals("ÍË³ö")) {
+        } else if (e.getActionCommand().equals("é€€å‡º")) {
             exit();
-        } else if (e.getActionCommand().equals("±£Áô½ØÍ¼")) {
+        } else if (e.getActionCommand().equals("ä¿ç•™æˆªå›¾")) {
             saveAs();
-        } else if (e.getActionCommand().equals("·Å´ó")) {
+        } else if (e.getActionCommand().equals("æ”¾å¤§")) {
             zoom(currentZoom + 1);
-        } else if (e.getActionCommand().equals("ËõĞ¡")) {
+        } else if (e.getActionCommand().equals("ç¼©å°")) {
             zoom(currentZoom - 1);
-        } else if (e.getActionCommand().equals("Õı³£´óĞ¡ (100%)")) {
+        } else if (e.getActionCommand().equals("æ­£å¸¸å¤§å° (100%)")) {
             zoom(1);
-        } else if (e.getActionCommand().equals("µ÷ÊÔÍø¸ñÏß")) {
+        } else if (e.getActionCommand().equals("è°ƒè¯•ç½‘æ ¼çº¿")) {
             setGridLines(((JCheckBoxMenuItem) e.getSource()).isSelected());
-        } else if (e.getActionCommand().equals("¹ØÓÚ")) {
+        } else if (e.getActionCommand().equals("å…³äº")) {
             JOptionPane.showMessageDialog(frame,
-                    "Îå×ÓÆå\n" + 
-                    "¼¼ÊõÉæ¼°£º\n" +
-                    "Alpha-Beta¼ôÖ¦Ëã·¨\n" +
-                    "²©ŞÄÊ÷\n" +
-                    "SwingÒµÎñÂß¼­ÊµÏÖ\n" +
-                    "\n"+"--°¢Õ¬£¨http£º//imzhai.com)",
-                   
-                    "¹ØÓÚ\n",
+                    "äº”å­æ£‹\n" +
+                            "æŠ€æœ¯æ¶‰åŠï¼š\n" +
+                            "Alpha-Betaå‰ªæç®—æ³•\n" +
+                            "åšå¼ˆæ ‘\n" +
+                            "Swingä¸šåŠ¡é€»è¾‘å®ç°\n" +
+                            "\n"+"--é˜¿å®…ï¼ˆhttpï¼š//imzhai.com)",
+
+                    "å…³äº\n",
                     JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    
+
     public void addKeyListener(KeyListener listener) {
         frame.addKeyListener(listener);
     }
-    
+
     public void addMouseListener(MouseListener listener) {
         panel.addMouseListener(listener);
     }
-    
+
     public void addMouseListener(MouseMotionListener listener) {
         panel.addMouseMotionListener(listener);
     }
-    
+
     public void addMouseMotionListener(MouseMotionListener listener) {
         panel.addMouseMotionListener(listener);
     }
-    
+
     public void addMouseListener(MouseInputListener listener) {
         panel.addMouseListener(listener);
         panel.addMouseMotionListener(listener);
     }
-    
-    // Çå³ıËùÓĞµÄÏß/ÑÕÉ«
+
+    // æ¸…é™¤æ‰€æœ‰çš„çº¿/é¢œè‰²
     public void clear() {
         int[] pixels = new int[width * height];
         for (int i = 0; i < pixels.length; i++) {
@@ -282,51 +282,51 @@ public final class DrawingPanel extends FileFilter
         }
         image.setRGB(0, 0, width, height, pixels, 0, 1);
     }
-  
-    // ÎÄ¼ş¸ñÊ½png»òÕßgif
+
+    // æ–‡ä»¶æ ¼å¼pngæˆ–è€…gif
     public String getDescription() {
         return "Image files (*.png; *.gif)";
     }
-    
-    // »ñµÃGraphics2D¶ÔÏó
+
+    // è·å¾—Graphics2Då¯¹è±¡
     public Graphics2D getGraphics() {
         return g2;
     }
-    
-    // ·µ»ØHeight
+
+    // è¿”å›Height
     public int getHeight() {
         return height;
     }
-     
-    // ÓÃDimension¶ÔÏó·µ»ØwidthºÍheight
+
+    // ç”¨Dimensionå¯¹è±¡è¿”å›widthå’Œheight
     public Dimension getSize() {
         return new Dimension(width, height);
     }
-    
-    // ·µ»ØWidth
+
+    // è¿”å›Width
     public int getWidth() {
         return width;
     }
-    
-    // ·µ»ØÄ¿Ç°µÄËõ·Å±¶Êı
+
+    // è¿”å›ç›®å‰çš„ç¼©æ”¾å€æ•°
     public int getZoom() {
         return currentZoom;
     }
-    
-    // ¼àÌıÊó±êĞĞÎª²¢½«×ø±êÏÔÊ¾ÔÚstatusbarÉÏ
+
+    // ç›‘å¬é¼ æ ‡è¡Œä¸ºå¹¶å°†åæ ‡æ˜¾ç¤ºåœ¨statusbarä¸Š
     public void mouseDragged(MouseEvent e) {}
     public void mouseMoved(MouseEvent e) {
         int x = e.getX() / currentZoom;
         int y = e.getY() / currentZoom;
         setStatusBarText("(" + x + ", " + y + ")");
     }
-    
-   
-    // ±£´æÎÄ¼şimage
+
+
+    // ä¿å­˜æ–‡ä»¶image
     public void save(String filename) throws IOException {
         BufferedImage image2 = getImage();
-        
-        // Èç¹ûËõ·ÅÁË£¬»Ö¸´ÔÙ±£´æ
+
+        // å¦‚æœç¼©æ”¾äº†ï¼Œæ¢å¤å†ä¿å­˜
         if (SAVE_SCALED_IMAGES && currentZoom != 1) {
             BufferedImage zoomedImage = new BufferedImage(width * currentZoom, height * currentZoom, image.getType());
             Graphics2D g = (Graphics2D) zoomedImage.getGraphics();
@@ -341,8 +341,8 @@ public final class DrawingPanel extends FileFilter
         int lastDot = filename.lastIndexOf(".");
         String extension = filename.substring(lastDot + 1);
         ImageIO.write(image2, extension, new File(filename));
-    }  
-    // ÉèÖÃ±³¾°ÑÕÉ«
+    }
+    // è®¾ç½®èƒŒæ™¯é¢œè‰²
     public void setBackground(Color c) {
         backgroundColor = c;
         if (isGraphical()) {
@@ -350,21 +350,21 @@ public final class DrawingPanel extends FileFilter
             imagePanel.setBackground(c);
         }
     }
-    
-    // Í¼ÏñµÄ¶¥²¿Íø¸ñÏßµÄ»æÍ¼°ïÖú
-    // Ê¹ÓÃµ÷ÊÔ³ß´çºÍ×ø±ê
+
+    // å›¾åƒçš„é¡¶éƒ¨ç½‘æ ¼çº¿çš„ç»˜å›¾å¸®åŠ©
+    // ä½¿ç”¨è°ƒè¯•å°ºå¯¸å’Œåæ ‡
     public void setGridLines(boolean gridLines) {
         this.gridLines = gridLines;
         imagePanel.repaint();
     }
-    
-    // Í¨¹ı¸ø¶¨Öµheight ³ÌĞò±ØĞëÔÙ´Îµ÷ÓÃgetGraphics()£¬ÖØĞÂ»ñÈ¡ÉÏÏÂÎÄÀ´½øĞĞ»æÍ¼
+
+    // é€šè¿‡ç»™å®šå€¼height ç¨‹åºå¿…é¡»å†æ¬¡è°ƒç”¨getGraphics()ï¼Œé‡æ–°è·å–ä¸Šä¸‹æ–‡æ¥è¿›è¡Œç»˜å›¾
     public void setHeight(int height) {
         setSize(getWidth(), height);
     }
-     
+
     public void setSize(int width, int height) {
-        // Ìæ»»»æÍ¼µÄBufferedImage
+        // æ›¿æ¢ç»˜å›¾çš„BufferedImage
         BufferedImage newImage = new BufferedImage(width, height, image.getType());
         imagePanel.setImage(newImage);
         newImage.getGraphics().drawImage(image, 0, 0, imagePanel);
@@ -381,20 +381,20 @@ public final class DrawingPanel extends FileFilter
             frame.pack();
         }
     }
-    
-    // frame¿É¼û²»¿É¼û
+
+    // frameå¯è§ä¸å¯è§
     public void setVisible(boolean visible) {
         if (isGraphical()) {
             frame.setVisible(visible);
         }
     }
-    
-    // ÉèÖÃ´°¿Ú×îÇ°£¨Ç¿ÆÈÖ¢£©=-=..
+
+    // è®¾ç½®çª—å£æœ€å‰ï¼ˆå¼ºè¿«ç—‡ï¼‰=-=..
     public void toFront() {
         toFront(frame);
     }
-    
-    // ¹Ø±Õ£¬ÍË³ö
+
+    // å…³é—­ï¼Œé€€å‡º
     public void windowClosing(WindowEvent event) {
         frame.setVisible(false);
         synchronized (getClass()) {
@@ -402,8 +402,8 @@ public final class DrawingPanel extends FileFilter
         }
         frame.dispose();
     }
-    
-    // ÊµÏÖWindowListener±ØĞëµÄ·½·¨£¨ÕâĞ©·½·¨Ä¿Ç°Î´Ê¹ÓÃ£©
+
+    // å®ç°WindowListenerå¿…é¡»çš„æ–¹æ³•ï¼ˆè¿™äº›æ–¹æ³•ç›®å‰æœªä½¿ç”¨ï¼‰
     public void windowActivated(WindowEvent event) {}
     public void windowClosed(WindowEvent event) {}
     public void windowDeactivated(WindowEvent event) {}
@@ -411,7 +411,7 @@ public final class DrawingPanel extends FileFilter
     public void windowIconified(WindowEvent event) {}
     public void windowOpened(WindowEvent event) {}
 
-    // ¸ù¾İfactor½øĞĞ·Å´óËõĞ¡
+    // æ ¹æ®factorè¿›è¡Œæ”¾å¤§ç¼©å°
     // factor >= 1
     public void zoom(int zoomFactor) {
         currentZoom = Math.max(1, zoomFactor);
@@ -433,17 +433,17 @@ public final class DrawingPanel extends FileFilter
             }
         }
     }
-    
-    // °ÑÖ÷´°¿Ú·Åµ½ÆÁÄ»ÖĞ¼ä
+
+    // æŠŠä¸»çª—å£æ”¾åˆ°å±å¹•ä¸­é—´
     private void center(Window frame) {
         Toolkit tk = Toolkit.getDefaultToolkit();
         Dimension screen = tk.getScreenSize();
-        
+
         int x = Math.max(0, (screen.width - frame.getWidth()) / 2);
         int y = Math.max(0, (screen.height - frame.getHeight()) / 2);
         frame.setLocation(x, y);
-    }   
-    // Èç¹ûÓĞ±ØÒª£¬¹¹Ôì²¢³õÊ¼»¯JFileChooser¶ÔÏó
+    }
+    // å¦‚æœæœ‰å¿…è¦ï¼Œæ„é€ å¹¶åˆå§‹åŒ–JFileChooserå¯¹è±¡
     private void checkChooser() {
         if (chooser == null) {
             // TODO: fix security on applet mode
@@ -452,8 +452,8 @@ public final class DrawingPanel extends FileFilter
             chooser.setFileFilter(this);
         }
     }
-        
-    // ÍË³ö³ÌĞò
+
+    // é€€å‡ºç¨‹åº
     private void exit() {
         if (isGraphical()) {
             frame.setVisible(false);
@@ -464,11 +464,11 @@ public final class DrawingPanel extends FileFilter
         } catch (SecurityException e) {
         }
     }
-  
-    //»ñÈ¡image
+
+    //è·å–image
     private BufferedImage getImage() {
-        BufferedImage image2;    
-            image2 = new BufferedImage(width, height, image.getType());
+        BufferedImage image2;
+        image2 = new BufferedImage(width, height, image.getType());
         Graphics g = image2.getGraphics();
         if (DEBUG) System.out.println("getImage setting background to " + backgroundColor);
         g.setColor(backgroundColor);
@@ -476,94 +476,94 @@ public final class DrawingPanel extends FileFilter
         g.drawImage(image, 0, 0, panel);
         return image2;
     }
-    
+
     private boolean isGraphical() {
         return !hasProperty(SAVE_PROPERTY) && !hasProperty(HEADLESS_PROPERTY);
     }
-    
-    // µã»÷±£´æÍ¼Æ¬µÄÊ±ºòµ÷ÓÃ
+
+    // ç‚¹å‡»ä¿å­˜å›¾ç‰‡çš„æ—¶å€™è°ƒç”¨
     private void saveAs() {
         String filename = saveAsHelper("png");
         if (filename != null) {
             try {
-                save(filename);  // ±£´æ
+                save(filename);  // ä¿å­˜
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(frame, "Unable to save image:\n" + ex);
             }
         }
     }
-    
+
     private String saveAsHelper(String extension) {
-        // Ê¹ÓÃÎÄ¼şÑ¡Ôñ¶Ô»°¿ò£¬»ñµÃÎÄ¼şÃûºÍ±£´æ¸ñÊ½
+        // ä½¿ç”¨æ–‡ä»¶é€‰æ‹©å¯¹è¯æ¡†ï¼Œè·å¾—æ–‡ä»¶åå’Œä¿å­˜æ ¼å¼
         checkChooser();
         if (chooser.showSaveDialog(frame) != JFileChooser.APPROVE_OPTION) {
             return null;
-        }     
+        }
         File selectedFile = chooser.getSelectedFile();
         String filename = selectedFile.toString();
         if (!filename.toLowerCase().endsWith(extension)) {
-            // =-=..Ñ¾µÄ²»¼Ó.¶¼²»ĞĞ£¬µ÷°ëÌì»¹ÒÔÎª³öbugÁË£¬windowsÌ«Éµ±ÆÁË£¡£¡£¡
+            // =-=..ä¸«çš„ä¸åŠ .éƒ½ä¸è¡Œï¼Œè°ƒåŠå¤©è¿˜ä»¥ä¸ºå‡ºbugäº†ï¼Œwindowså¤ªå‚»é€¼äº†ï¼ï¼ï¼
             filename += "." + extension;
         }
 
-        // Èç¹ûÓĞ£¬ÊÇ·ñ¸²¸Ç
+        // å¦‚æœæœ‰ï¼Œæ˜¯å¦è¦†ç›–
         if (new File(filename).exists() && JOptionPane.showConfirmDialog(
-                frame, "ÎÄ¼ş´æÔÚ.  ÊÇ·ñOverwrite?", "Overwrite?",
+                frame, "æ–‡ä»¶å­˜åœ¨.  æ˜¯å¦Overwrite?", "Overwrite?",
                 JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
             return null;
         }
 
         return filename;
     }
-    
-    // µ×²¿µÄ×´Ì¬À¸ÏÔÊ¾·Å´ó±¶Êı
+
+    // åº•éƒ¨çš„çŠ¶æ€æ æ˜¾ç¤ºæ”¾å¤§å€æ•°
     private void setStatusBarText(String text) {
         if (currentZoom != 1) {
             text += " (current zoom: " + currentZoom + "x" + ")";
         }
         statusBar.setText(text);
     }
-    
-    // ³õÊ¼»¯UI¿Ø¼ş
+
+    // åˆå§‹åŒ–UIæ§ä»¶
     private void setupMenuBar() {
         boolean secure = (System.getSecurityManager() != null);
-        
-        JMenuItem saveAs = new JMenuItem("±£Áô½ØÍ¼", 'A');
+
+        JMenuItem saveAs = new JMenuItem("ä¿ç•™æˆªå›¾", 'A');
         saveAs.addActionListener(this);
         saveAs.setAccelerator(KeyStroke.getKeyStroke("ctrl S"));
         saveAs.setEnabled(!secure);
-        
-        
-        JMenuItem zoomIn = new JMenuItem("·Å´ó", 'I');
+
+
+        JMenuItem zoomIn = new JMenuItem("æ”¾å¤§", 'I');
         zoomIn.addActionListener(this);
         zoomIn.setAccelerator(KeyStroke.getKeyStroke("ctrl EQUALS"));
-        
-        JMenuItem zoomOut = new JMenuItem("ËõĞ¡", 'O');
+
+        JMenuItem zoomOut = new JMenuItem("ç¼©å°", 'O');
         zoomOut.addActionListener(this);
         zoomOut.setAccelerator(KeyStroke.getKeyStroke("ctrl MINUS"));
-        
-        JMenuItem zoomNormal = new JMenuItem("Õı³£´óĞ¡ (100%)", 'N');
+
+        JMenuItem zoomNormal = new JMenuItem("æ­£å¸¸å¤§å° (100%)", 'N');
         zoomNormal.addActionListener(this);
         zoomNormal.setAccelerator(KeyStroke.getKeyStroke("ctrl 0"));
-        
-        JMenuItem gridLinesItem = new JCheckBoxMenuItem("µ÷ÊÔÍø¸ñÏß");
+
+        JMenuItem gridLinesItem = new JCheckBoxMenuItem("è°ƒè¯•ç½‘æ ¼çº¿");
         gridLinesItem.setMnemonic('G');
         gridLinesItem.addActionListener(this);
         gridLinesItem.setAccelerator(KeyStroke.getKeyStroke("ctrl G"));
-        
-        JMenuItem exit = new JMenuItem("ÍË³ö", 'x');
+
+        JMenuItem exit = new JMenuItem("é€€å‡º", 'x');
         exit.addActionListener(this);
-        
-        JMenuItem about = new JMenuItem("¹ØÓÚ", 'A');
+
+        JMenuItem about = new JMenuItem("å…³äº", 'A');
         about.addActionListener(this);
-        
+
         JMenu file = new JMenu("File");
         file.setMnemonic('F');
         file.addSeparator();
         file.add(saveAs);
         file.addSeparator();
         file.add(exit);
-        
+
         JMenu view = new JMenu("View");
         view.setMnemonic('V');
         view.add(zoomIn);
@@ -571,22 +571,22 @@ public final class DrawingPanel extends FileFilter
         view.add(zoomNormal);
         view.addSeparator();
         view.add(gridLinesItem);
-        
+
         JMenu help = new JMenu("Help");
         help.setMnemonic('H');
         help.add(about);
-        
+
         JMenuBar bar = new JMenuBar();
         bar.add(file);
         bar.add(view);
         bar.add(help);
         frame.setJMenuBar(bar);
-    }  
+    }
     private boolean shouldSave() {
         return hasProperty(SAVE_PROPERTY);
     }
-    
-    // ´°¿Ú·Åµ½×îÇ°£¨ÖÃ¶¥£©
+
+    // çª—å£æ”¾åˆ°æœ€å‰ï¼ˆç½®é¡¶ï¼‰
     private void toFront(final Window window) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
