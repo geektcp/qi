@@ -3,7 +3,7 @@ package com.geektcp.thybang;
 
 import com.geektcp.thybang.panel.Ai;
 import com.geektcp.thybang.panel.DrawingPanel;
-import com.geektcp.thybang.panel.ThyMouseEvent;
+import com.geektcp.thybang.panel.QiMouseEvent;
 
 
 /**
@@ -13,8 +13,8 @@ public class Application {
 
     public static void main(String[] args) {
         DrawingPanel panel = new DrawingPanel(700, 700);
-        ThyMouseEvent myMouseEvent = new ThyMouseEvent();
-        panel.addMouseListener(myMouseEvent);
+        QiMouseEvent qiMouseEvent = new QiMouseEvent();
+        panel.addMouseListener(qiMouseEvent);
         Ai.init(panel);
         Ai.initChessBoard();
     }
