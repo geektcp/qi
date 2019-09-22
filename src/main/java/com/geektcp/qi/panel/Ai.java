@@ -1,4 +1,4 @@
-package com.geektcp.thybang.panel;
+package com.geektcp.qi.panel;
 /**
  * AI算法和主函数入口
  */

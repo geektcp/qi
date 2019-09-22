@@ -1,9 +1,9 @@
-package com.geektcp.thybang;
+package com.geektcp.qi;
 
 
-import com.geektcp.thybang.panel.Ai;
-import com.geektcp.thybang.panel.DrawingPanel;
-import com.geektcp.thybang.panel.QiMouseEvent;
+import com.geektcp.qi.panel.Ai;
+import com.geektcp.qi.panel.DrawingPanel;
+import com.geektcp.qi.panel.QiMouseEvent;
 
 
 /**

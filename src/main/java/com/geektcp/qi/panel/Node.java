@@ -1,4 +1,4 @@
-package com.geektcp.thybang.panel;
+package com.geektcp.qi.panel;
 
 import java.awt.*;
 import java.util.ArrayList;

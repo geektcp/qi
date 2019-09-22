@@ -1,4 +1,4 @@
-package com.geektcp.thybang.server;
+package com.geektcp.qi.server;
 
 public class Agent {
 	Board board;
