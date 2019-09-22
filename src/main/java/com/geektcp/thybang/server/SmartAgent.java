@@ -1,8 +1,6 @@
 package com.geektcp.thybang.server;
 
-/**
- * com.geektcp.thybang.server.SmartAgent class that uses minimax algorithm and heuristic evaluation to pick next move
- */
+
 public class SmartAgent extends Agent {
 
 	Minimax minimax;

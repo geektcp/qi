@@ -3,9 +3,7 @@ package com.geektcp.thybang.server;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * com.geektcp.thybang.server.RandomAgent class has Random() to generate random moves
- */
+
 public class RandomAgent extends Agent {
 
 	Random r;

@@ -1,6 +1,6 @@
 package com.geektcp.thybang.panel;
 /**
- * AIËã·¨ºÍÖ÷º¯ÊıÈë¿Ú
+ * AIç®—æ³•å’Œä¸»å‡½æ•°å…¥å£
  */
 
 import javax.swing.*;
@@ -14,15 +14,15 @@ public class Ai {
     //
     private static DrawingPanel panel;
     private static Graphics g;
-    public static boolean isBlack = false;//±êÖ¾Æå×ÓµÄÑÕÉ«
-    public static int[][] chessBoard = new int[17][17]; //ÆåÅÌÆå×ÓµÄ°Ú·ÅÇé¿ö£º0ÎŞ×Ó£¬1ºÚ×Ó£¬£­1°××Ó
-    private static HashSet<Point> toJudge = new HashSet<Point>(); // ai¿ÉÄÜ»áÏÂÆåµÄµã
-    private static int dr[] = new int[]{-1, 1, -1, 1, 0, 0, -1, 1}; // ·½ÏòÏòÁ¿
-    private static int dc[] = new int[]{1, -1, -1, 1, -1, 1, 0, 0}; //·½ÏòÏòÁ¿
+    public static boolean isBlack = false;//æ ‡å¿—æ£‹å­çš„é¢œè‰²
+    public static int[][] chessBoard = new int[17][17]; //æ£‹ç›˜æ£‹å­çš„æ‘†æ”¾æƒ…å†µï¼š0æ— å­ï¼Œ1é»‘å­ï¼Œï¼1ç™½å­
+    private static HashSet<Point> toJudge = new HashSet<Point>(); // aiå¯èƒ½ä¼šä¸‹æ£‹çš„ç‚¹
+    private static int dr[] = new int[]{-1, 1, -1, 1, 0, 0, -1, 1}; // æ–¹å‘å‘é‡
+    private static int dc[] = new int[]{1, -1, -1, 1, -1, 1, 0, 0}; //æ–¹å‘å‘é‡
     public static final int MAXN = 1 << 28;
     public static final int MINN = -MAXN;
-    private static int searchDeep = 4;    //ËÑË÷Éî¶È
-    private static final int size = 15;   //ÆåÅÌ´óĞ¡
+    private static int searchDeep = 4;    //æœç´¢æ·±åº¦
+    private static final int size = 15;   //æ£‹ç›˜å¤§å°
     public static boolean isFinished = false;
 
 
@@ -31,7 +31,7 @@ public class Ai {
         g = panel.getGraphics();
     }
 
-    // ³õÊ¼»¯º¯Êı£¬»æÍ¼  
+    // åˆå§‹åŒ–å‡½æ•°ï¼Œç»˜å›¾
     public static void initChessBoard() {
         isBlack = false;
         toJudge.clear();
@@ -43,18 +43,18 @@ public class Ai {
             g.drawLine(45, i, 675, i);
             g.drawLine(i, 45, i, 675);
         }
-        // ÆåÅÌÉÏµÄÎå¸ö¶¨Î»»ù±¾µã£¬Í¼ÖĞµÄĞ¡Ô²È¦  
+        // æ£‹ç›˜ä¸Šçš„äº”ä¸ªå®šä½åŸºæœ¬ç‚¹ï¼Œå›¾ä¸­çš„å°åœ†åœˆ
         g.setColor(Color.BLACK);
         g.fillOval(353, 353, 14, 14);
         g.fillOval(218, 218, 14, 14);
         g.fillOval(488, 218, 14, 14);
         g.fillOval(488, 488, 14, 14);
         g.fillOval(218, 488, 14, 14);
-        // ³õÊ¼»¯ÆåÅÌ  
+        // åˆå§‹åŒ–æ£‹ç›˜
         for (int i = 1; i <= 15; ++i)
             for (int j = 1; j <= 15; ++j)
                 chessBoard[i][j] = 0;
-        // aiÏÈÊÖ  
+        // aiå…ˆæ‰‹
         g.fillOval(337, 337, 45, 45);
         chessBoard[8][8] = 1;
         for (int i = 0; i < 8; ++i)
@@ -66,7 +66,7 @@ public class Ai {
         isBlack = false;
     }
 
-    // Í¨¹ıµã»÷ÊÂ¼ş£¬µÃµ½Æå×ÓÎ»ÖÃ½øĞĞÏÂÆå  
+    // é€šè¿‡ç‚¹å‡»äº‹ä»¶ï¼Œå¾—åˆ°æ£‹å­ä½ç½®è¿›è¡Œä¸‹æ£‹
     public static void putChess(int x, int y) {
         if (isBlack)
             g.setColor(Color.BLACK);
@@ -75,7 +75,7 @@ public class Ai {
         g.fillOval(x - 22, y - 22, 45, 45);
         chessBoard[y / 45][x / 45] = isBlack ? 1 : -1;
         if (isEnd(x / 45, y / 45)) {
-            String s = Ai.isBlack ? "ºÚ×ÓÊ¤" : "°××ÓÊ¤";
+            String s = Ai.isBlack ? "é»‘å­èƒœ" : "ç™½å­èƒœ";
             JOptionPane.showMessageDialog(null, s);
             isBlack = true;
             initChessBoard();
@@ -91,21 +91,21 @@ public class Ai {
         }
     }
 
-    // ai²©ŞÄÈë¿Úº¯Êı  
+    // aiåšå¼ˆå…¥å£å‡½æ•°
     public static void myAI() {
         Node node = new Node();
         dfs(0, node, MINN, MAXN, null);
         Point now = node.bestChild.p;
-        // toJudge.remove(now);  
+        // toJudge.remove(now);
         putChess(now.x * 45, now.y * 45);
         isBlack = false;
     }
 
-    // alpha beta dfs  
+    // alpha beta dfs
     private static void dfs(int deep, Node root, int alpha, int beta, Point p) {
         if (deep == searchDeep) {
             root.mark = getMark();
-            // System.out.printf("%d\t%d\t%d\n",p.x,p.y,root.mark);  
+            // System.out.printf("%d\t%d\t%d\n",p.x,p.y,root.mark);
             return;
         }
         ArrayList<Point> judgeSet = new ArrayList<Point>();
@@ -129,7 +129,7 @@ public class Ai {
                 return;
             }
 
-            boolean flags[] = new boolean[8]; //±ê¼Ç»ØËİÊ±Òª²»ÒªÉ¾µô
+            boolean flags[] = new boolean[8]; //æ ‡è®°å›æº¯æ—¶è¦ä¸è¦åˆ æ‰
             Arrays.fill(flags, true);
             for (int i = 0; i < 8; ++i) {
                 Point next = new Point(now.x + dc[i], now.y + dr[i]);
@@ -149,8 +149,8 @@ public class Ai {
             for (int i = 0; i < 8; ++i)
                 if (flags[i])
                     toJudge.remove(new Point(now.x + dc[i], now.y + dr[i]));
-            // alpha beta¼ôÖ¦  
-            // min²ã  
+            // alpha betaå‰ªæ
+            // minå±‚
             if ((deep & 1) == 1) {
                 if (root.bestChild == null || root.getLastChild().mark < root.bestChild.mark) {
                     root.bestChild = root.getLastChild();
@@ -162,7 +162,7 @@ public class Ai {
                 if (root.mark <= alpha)
                     return;
             }
-            // max²ã  
+            // maxå±‚
             else {
                 if (root.bestChild == null || root.getLastChild().mark > root.bestChild.mark) {
                     root.bestChild = root.getLastChild();
@@ -175,7 +175,7 @@ public class Ai {
                     return;
             }
         }
-        // if(deep==0) System.out.printf("******************************************\n");  
+        // if(deep==0) System.out.printf("******************************************\n");
     }
 
     public static int getMark() {
@@ -183,7 +183,7 @@ public class Ai {
         for (int i = 1; i <= size; ++i) {
             for (int j = 1; j <= size; ++j) {
                 if (chessBoard[i][j] != 0) {
-                    // ĞĞ  
+                    // è¡Œ
                     boolean flag1 = false, flag2 = false;
                     int x = j, y = i;
                     int cnt = 1;
@@ -198,7 +198,7 @@ public class Ai {
                         res += chessBoard[i][j] * cnt * cnt;
                     else if (flag1 || flag2) res += chessBoard[i][j] * cnt * cnt / 4;
                     if (cnt >= 5) res = MAXN * chessBoard[i][j];
-                    // ÁĞ  
+                    // åˆ—
                     col = x;
                     row = y;
                     cnt = 1;
@@ -215,7 +215,7 @@ public class Ai {
                     else if (flag1 || flag2)
                         res += chessBoard[i][j] * cnt * cnt / 4;
                     if (cnt >= 5) res = MAXN * chessBoard[i][j];
-                    // ×ó¶Ô½ÇÏß  
+                    // å·¦å¯¹è§’çº¿
                     col = x;
                     row = y;
                     cnt = 1;
@@ -231,7 +231,7 @@ public class Ai {
                         res += chessBoard[i][j] * cnt * cnt;
                     else if (flag1 || flag2) res += chessBoard[i][j] * cnt * cnt / 4;
                     if (cnt >= 5) res = MAXN * chessBoard[i][j];
-                    // ÓÒ¶Ô½ÇÏß  
+                    // å³å¯¹è§’çº¿
                     col = x;
                     row = y;
                     cnt = 1;
@@ -254,7 +254,7 @@ public class Ai {
         return res;
     }
 
-    // for debug  
+    // for debug
     public static void debug() {
         for (int i = 1; i <= size; ++i) {
             for (int j = 1; j <= size; ++j) {
@@ -264,9 +264,9 @@ public class Ai {
         }
     }
 
-    // ÅĞ¶ÏÊÇ·ñÒ»·½È¡Ê¤  
+    // åˆ¤æ–­æ˜¯å¦ä¸€æ–¹å–èƒœ
     public static boolean isEnd(int x, int y) {
-        // ÅĞ¶ÏÒ»ĞĞÊÇ·ñÎå×ÓÁ¬Öé  
+        // åˆ¤æ–­ä¸€è¡Œæ˜¯å¦äº”å­è¿ç 
         int cnt = 1;
         int col = x, row = y;
         while (--col > 0 && chessBoard[row][col] == chessBoard[y][x]) ++cnt;
@@ -277,7 +277,7 @@ public class Ai {
             isFinished = true;
             return true;
         }
-        // ÅĞ¶ÏÒ»ÁĞÊÇ·ñÎå×ÓÁ¬Öé  
+        // åˆ¤æ–­ä¸€åˆ—æ˜¯å¦äº”å­è¿ç 
         col = x;
         row = y;
         cnt = 1;
@@ -289,7 +289,7 @@ public class Ai {
             isFinished = true;
             return true;
         }
-        // ÅĞ¶Ï×ó¶Ô½ÇÏßÊÇ·ñÎå×ÓÁ¬Öé  
+        // åˆ¤æ–­å·¦å¯¹è§’çº¿æ˜¯å¦äº”å­è¿ç 
         col = x;
         row = y;
         cnt = 1;
@@ -301,7 +301,7 @@ public class Ai {
             isFinished = true;
             return true;
         }
-        // ÅĞ¶ÏÓÒ¶Ô½ÇÏßÊÇ·ñÎå×ÓÁ¬Öé  
+        // åˆ¤æ–­å³å¯¹è§’çº¿æ˜¯å¦äº”å­è¿ç 
         col = x;
         row = y;
         cnt = 1;

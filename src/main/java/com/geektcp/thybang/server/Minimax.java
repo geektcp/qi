@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * com.geektcp.thybang.server.Minimax class has evaluation function and minimax algorithm with alpha-beta pruning to determine best moves.
- */
 public class Minimax {
 
 	/**
@@ -22,13 +19,7 @@ public class Minimax {
 		return score;
 	}
 
-	/**
-	 * com.geektcp.thybang.server.Minimax algorithm with alpha-beta pruning.
-	 * @param  depth lookahead
-	 * @param  myBest alpha
-	 * @param  theirBest beta
-	 * @return Object[0] contains (Double) score and Object[1] contains (String) move
-	 */
+
 	Object[] mmab(Board board, int d, double myBest, double theirBest) {
 		ArrayList<String> moveList;
 		Set<String> moves = new HashSet<String>();

@@ -2,9 +2,7 @@ package com.geektcp.thybang.server;
 
 import java.util.Scanner;
 
-/**
- * com.geektcp.thybang.server.Human class contains prompts for user input
- */
+
 public class Human extends Agent {
 
 	Scanner scan;
